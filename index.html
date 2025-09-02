@@ -578,53 +578,59 @@
 
 
 
+
+        
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UI Strengths Chart</title>
+    <title>Animated Doughnut Chart</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .chart-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
             position: relative;
-            background-color: transparent;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            max-width: 100%;
         }
         
-        .chart-title {
-            text-align: center;
-            font-family: 'Arial', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #333;
+        .center-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
+        @media (max-width: 480px) {
             .chart-container {
-                max-width: 90%;
+                width: 300px;
+                height: 300px;
             }
             
-            .chart-title {
-                font-size: 1.2rem;
+            .center-image {
+                width: 90px;
+                height: 90px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- This is the container for our chart -->
     <div class="chart-container">
-        <h2 class="chart-title">UI Strengths (%)</h2>
-        <canvas id="uiStrengthsChart"></canvas>
+        <canvas id="myChart"></canvas>
+        <img src="profile1.png" alt="Profile" class="center-image" onerror="this.style.display='none'">
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get the canvas element
-            const ctx = document.getElementById('uiStrengthsChart').getContext('2d');
+            const ctx = document.getElementById('myChart').getContext('2d');
             
             // Chart data
             const data = {
@@ -649,20 +655,15 @@
                     hoverOffset: 15
                 }]
             };
-
+            
             // Chart configuration
             const config = {
                 type: 'doughnut',
                 data: data,
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 2000,
-                        easing: 'easeOutBounce'
-                    },
+                    maintainAspectRatio: false,
+                    cutout: '65%',
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -671,28 +672,52 @@
                                     size: 14,
                                     family: "'Arial', sans-serif"
                                 },
+                                color: '#333',
                                 padding: 20
                             }
                         },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.label}: ${context.raw}%`;
+                                    return `${context.label}: ${context.parsed}%`;
                                 }
                             }
                         }
                     },
-                    cutout: '50%'
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true,
+                        duration: 2000,
+                        easing: 'easeOutBounce'
+                    }
                 }
             };
-
+            
             // Create the chart
             const myChart = new Chart(ctx, config);
             
-            // Make the chart responsive to window resize
-            window.addEventListener('resize', function() {
-                myChart.resize();
-            });
+            // Make chart container responsive
+            function makeChartResponsive() {
+                const chartContainer = document.querySelector('.chart-container');
+                const aspectRatio = 1; // Square aspect ratio
+                
+                function resizeChart() {
+                    const containerWidth = chartContainer.parentElement.clientWidth;
+                    if (containerWidth < 400) {
+                        chartContainer.style.width = containerWidth + 'px';
+                        chartContainer.style.height = (containerWidth * aspectRatio) + 'px';
+                    } else {
+                        chartContainer.style.width = '400px';
+                        chartContainer.style.height = '400px';
+                    }
+                    myChart.resize();
+                }
+                
+                resizeChart();
+                window.addEventListener('resize', resizeChart);
+            }
+            
+            makeChartResponsive();
         });
     </script>
 </body>
@@ -702,7 +727,6 @@
 
 
 
-<center><img src="profile1.png" height="150" width="150"></center>
 
     
     <!-- Footer -->

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Luminara | Advanced Web Framework</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Particle.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    
+    <!-- Barba.js -->
+    <script src="https://unpkg.com/@barba/core"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0B0F19;
+            --primary: #3B82F6;
+            --secondary: #A855F7;
+            --highlight-cyan: #06B6D4;
+            --highlight-lime: #84CC16;
+            --text-white: #F9FAFB;
+            --text-gray: rgba(249, 250, 251, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        
+        /* Particle container */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            transition: all 0.5s ease;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand span {
+            color: var(--secondary);
+        }
+        
+        .nav-link {
+            color: var(--text-gray);
+            margin: 0 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+        
+        .hero-content {
+            z-index: 2;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        
+        .hero-buttons .btn {
+            margin-right: 15px;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+        }
+        
+        .btn-outline-light {
+            border: 2px solid var(--text-gray);
+            color: var(--text-gray);
+        }
+        
+        .btn-outline-light:hover {
+            background: var(--text-white);
+            color: var(--bg-dark);
+            border-color: var(--text-white);
+        }
+        
+        /* Three.js Container */
+        #three-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* About Section */
+        .about-section {
+            padding: 100px 0;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .about-content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            transition: all 0.5s ease;
+        }
+        
+        .about-content:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* Features Section */
+        .features-section {
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-box {
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            transition: all 0.5s ease;
+            margin-bottom: 30px;
+            height: 100%;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-10px);
+            background: linear-gradient(145deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Creator Section */
+        .creator-section {
+            padding: 100px 0;
+        }
+        
+        .creator-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+        }
+        
+        .creator-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.2);
+        }
+        
+        .creator-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        .creator-content {
+            padding: 30px;
+        }
+        
+        .social-links {
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            color: var(--text-white);
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            transform: translateY(-5px);
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 60px 0 30px;
+        }
+        
+        .footer-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-gray);
+        }
+        
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 30px var(--primary);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            #three-container {
+                width: 100%;
+                opacity: 0.3;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .about-content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles.js Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Luminara<span>JS</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Components</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Templates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Documentation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="hero-title">Luminara Framework</h1>
+                    <p class="hero-subtitle">A revolutionary collection of UI components and templates built with cutting-edge technologies to empower web developers.</p>
+                    <div class="hero-buttons">
+                        <a href="#" class="btn btn-primary">Get Started</a>
+                        <a href="#" class="btn btn-outline-light">View Components</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Three.js Container -->
+        <div id="three-container"></div>
+    </section>
+    
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <h2 class="section-title text-center mb-5 fade-in">About Luminara</h2>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="about-content fade-in">
+                        <h3 class="mb-4">What is Luminara?</h3>
+                        <p>Luminara is not just another JavaScript library—it's a comprehensive platform that provides beautifully crafted UI components, templates, and design systems for modern web development.</p>
+                        <p>Built with performance and aesthetics in mind, Luminara combines the power of multiple advanced JavaScript libraries to deliver exceptional user experiences.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="about-content fade-in">
+                        <h3 class="mb-4">Our Philosophy</h3>
+                        <p>We believe that beautiful design and smooth functionality should be accessible to every developer. Luminara eliminates the complexity of combining multiple animation and UI libraries by providing a unified, cohesive system.</p>
+                        <p>Our components are designed to work seamlessly together while offering extensive customization options.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="about-content fade-in">
+                        <h3 class="mb-4">Technology Stack</h3>
+                        <div class="row text-center">
+                            <div class="col-md-2 col-4 mb-3">
+                                <i class="fab fa-js-square fa-3x" style="color: #F7DF1E;"></i>
+                                <p class="mt-2">JavaScript</p>
+                            </div>
+                            <div class="col-md-2 col-4 mb-3">
+                                <i class="fab fa-bootstrap fa-3x" style="color: #7952B3;"></i>
+                                <p class="mt-2">Bootstrap</p>
+                            </div>
+                            <div class="col-md-2 col-4 mb-3">
+                                <i class="fas fa-cube fa-3x" style="color: #3B82F6;"></i>
+                                <p class="mt-2">Three.js</p>
+                            </div>
+                            <div class="col-md-2 col-4 mb-3">
+                                <i class="fas fa-project-diagram fa-3x" style="color: #A855F7;"></i>
+                                <p class="mt-2">GSAP</p>
+                            </div>
+                            <div class="col-md-2 col-4 mb-3">
+                                <i class="fas fa-wave-square fa-3x" style="color: #06B6D4;"></i>
+                                <p class="mt-2">Anime.js</p>
+                            </div>
+                            <div class="col-md-2 col-4 mb-3">
+                                <i class="fas fa-magic fa-3x" style="color: #84CC16;"></i>
+                                <p class="mt-2">Particles.js</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title text-center mb-5 fade-in">Why Choose Luminara?</h2>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4>Lightning Fast</h4>
+                        <p>Optimized components that ensure blazing fast performance and smooth animations.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-responsive"></i>
+                        </div>
+                        <h4>Fully Responsive</h4>
+                        <p>Perfectly adapted for all screen sizes from mobile to desktop.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-customize"></i>
+                        </div>
+                        <h4>Highly Customizable</h4>
+                        <p>Easily modify components to match your brand identity.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-animation"></i>
+                        </div>
+                        <h4>Advanced Animations</h4>
+                        <p>Leverage the power of GSAP, Anime.js, and more for stunning effects.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-documentation"></i>
+                        </div>
+                        <h4>Comprehensive Docs</h4>
+                        <p>Detailed documentation with examples for every component.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-community"></i>
+                        </div>
+                        <h4>Active Community</h4>
+                        <p>Join a growing community of developers and designers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Creator Section -->
+    <section class="creator-section" id="creator">
+        <div class="container">
+            <h2 class="section-title text-center mb-5 fade-in">Meet The Creator</h2>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="creator-card fade-in">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80" alt="Hanzla Baig" class="creator-img">
+                        
+                        <div class="creator-content">
+                            <h3>Hanzla Baig</h3>
+                            <p class="text-primary">Full Stack Developer & UI/UX Designer</p>
+                            <p>Hanzla is a passionate developer with over 7 years of experience in web development. He created Luminara to solve the common challenges developers face when trying to create beautiful, performant websites with complex animations.</p>
+                            <p>His expertise includes JavaScript, React, Node.js, and modern CSS frameworks. When not coding, Hanzla contributes to open-source projects and mentors aspiring developers.</p>
+                            
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#"><i class="fab fa-dribbble"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="footer-title">Luminara</h4>
+                    <p>Advanced UI components and templates for modern web development.</p>
+                </div>
+                
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Components</a></li>
+                        <li><a href="#">Templates</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5>Resources</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-4 mb-4">
+                    <h5>Subscribe to Our Newsletter</h5>
+                    <p>Stay updated with the latest components and features.</p>
+                    <form class="mt-3">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Your email address">
+                            <button class="btn btn-primary" type="button">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Luminara. Created by Hanzla Baig. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize Particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 80,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: ["#3B82F6", "#A855F7", "#06B6D4", "#84CC16"]
+                    },
+                    shape: {
+                        type: "circle",
+                        stroke: {
+                            width: 0,
+                            color: "#000000"
+                        }
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 1,
+                            opacity_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    size: {
+                        value: 5,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 2,
+                            size_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#3B82F6",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: "grab"
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: "push"
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 140,
+                            line_linked: {
+                                opacity: 1
+                            }
+                        },
+                        push: {
+                            particles_nb: 4
+                        }
+                    }
+                },
+                retina_detect: true
+            });
+            
+            // Initialize Three.js
+            const threeContainer = document.getElementById('three-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, threeContainer.offsetWidth / threeContainer.offsetHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(threeContainer.offsetWidth, threeContainer.offsetHeight);
+            threeContainer.appendChild(renderer.domElement);
+            
+            // Create geometry and material
+            const geometry = new THREE.IcosahedronGeometry(2, 0);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x3B82F6,
+                shininess: 100,
+                wireframe: false
+            });
+            
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(directionalLight);
+            
+            const pointLight = new THREE.PointLight(0xA855F7, 1, 100);
+            pointLight.position.set(-5, -5, -5);
+            scene.add(pointLight);
+            
+            camera.position.z = 5;
+            
+            // Animation
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                mesh.rotation.x += 0.005;
+                mesh.rotation.y += 0.01;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                camera.aspect = threeContainer.offsetWidth / threeContainer.offsetHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(threeContainer.offsetWidth, threeContainer.offsetHeight);
+            });
+            
+            // Initialize Lenis Smooth Scroll
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                orientation: 'vertical',
+                gestureOrientation: 'vertical',
+                smoothWheel: true
+            });
+            
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            
+            requestAnimationFrame(raf);
+            
+            // Initialize GSAP animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            gsap.utils.toArray('.fade-in').forEach(element => {
+                gsap.to(element, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+            });
+            
+            // Add float animation to elements
+            gsap.to('.float-animation', {
+                y: 20,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: 'power1.inOut'
+            });
+            
+            // Navbar animation on scroll
+            let lastScrollY = window.scrollY;
+            const navbar = document.querySelector('.navbar');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.style.padding = '10px 0';
+                    navbar.style.background = 'rgba(11, 15, 25, 0.95)';
+                    
+                    if (window.scrollY > lastScrollY) {
+                        gsap.to(navbar, { y: -100, duration: 0.5 });
+                    } else {
+                        gsap.to(navbar, { y: 0, duration: 0.5 });
+                    }
+                } else {
+                    navbar.style.padding = '20px 0';
+                    navbar.style.background = 'rgba(11, 15, 25, 0.8)';
+                }
+                
+                lastScrollY = window.scrollY;
+            });
+            
+            // Initialize Barba.js for page transitions
+            barba.init({
+                transitions: [{
+                    name: 'opacity-transition',
+                    leave(data) {
+                        return gsap.to(data.current.container, {
+                            opacity: 0,
+                            duration: 0.5
+                        });
+                    },
+                    enter(data) {
+                        return gsap.from(data.next.container, {
+                            opacity: 0,
+                            duration: 0.5
+                        });
+                    }
+                }]
+            });
+            
+            // Add hover effects to buttons
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    anime({
+                        targets: this,
+                        scale: 1.05,
+                        duration: 300,
+                        easing: 'easeOutExpo'
+                    });
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    anime({
+                        targets: this,
+                        scale: 1,
+                        duration: 300,
+                        easing: 'easeOutExpo'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
